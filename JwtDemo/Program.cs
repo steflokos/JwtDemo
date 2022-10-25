@@ -20,7 +20,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<IAccountService, AccountService>();
 builder.Services.AddSingleton<IJwtHandler, JwtHandler>();
-//builder.Services.AddSingleton<IPasswordHasher<DbUser>, PasswordHasher<DbUser>>(); //isos na min to theloume mias kai exoume to secret hasher
+builder.Services.AddSingleton<IPasswordHasher<DbUser>, PasswordHasher<DbUser>>();
 
 builder.Services.AddTransient<IAccessTokenManager, AccessTokenManager>();
 builder.Services.AddTransient<IRefreshTokenManager, RefreshTokenManager>();
