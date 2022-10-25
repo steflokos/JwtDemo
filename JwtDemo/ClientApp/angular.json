@@ -27,6 +27,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
@@ -95,6 +96,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -129,5 +131,8 @@
       }
     }
   },
-  "defaultProject": "JwtDemo"
+  "defaultProject": "JwtDemo",
+  "cli": {
+    "analytics": "7ffee080-bb39-4c94-9fe6-0e1a69c51c81"
+  }
 }
