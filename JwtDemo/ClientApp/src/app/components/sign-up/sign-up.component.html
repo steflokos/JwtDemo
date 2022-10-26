@@ -1,0 +1,108 @@
+<mat-card class="card scrollable-content">
+
+  <mat-card-header>
+    <img src="../../assets/user-simple.png" class="profile-img-card" />
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <form *ngIf="!signedUp && (!(signedIn | async))" [formGroup]="signUpForm" (ngSubmit)="signUpForm.valid && onSubmit()" novalidate>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="Enter you username." type="text" required formControlName="username">
+          <mat-error *ngIf="username?.invalid">{{getUsernameErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline" formGroupName="passwordGroup">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Enter your password." [type]="hidePassword ? 'password' : 'text'" required
+            formControlName="password">
+          <button mat-icon-button type="button" matSuffix (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error></mat-error>
+          </button>
+          <mat-error *ngIf="password?.invalid">{{getPasswordErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline" formGroupName="passwordGroup">
+          <mat-label>Password Confirmation</mat-label>
+          <input matInput placeholder="Re-enter your password." [type]="hidePassword ? 'password' : 'text'" required
+            formControlName="passwordConfirmation" [errorStateMatcher]="parentErrorStateMatcher">
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error></mat-error>
+          </button>
+          <mat-error
+            *ngIf="passwordConfirmation?.invalid || signUpForm?.get('passwordGroup')?.hasError('notMatchingPasswords') ">
+            {{getPasswordConfirmationErrorMessage()}} </mat-error>
+          <!-- <mat-error *ngIf="signUpForm?.hasError('notMatchingPasswords')">{{getFormErrorMessage()}}</mat-error> -->
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput placeholder="Enter your first name." type="text" required formControlName="firstName">
+          <mat-error *ngIf="firstName?.invalid">{{getFirstNameErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput placeholder="Enter your last name." type="text" required formControlName="lastName">
+          <mat-error *ngIf="lastName?.invalid">{{getLastNameErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Contact Number</mat-label>
+          <input matInput placeholder="Enter your contact number." type="text" required formControlName="contactNumber">
+          <mat-error *ngIf="contactNumber?.invalid">{{getContactNumberErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+
+      <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Enter your email." type="text" required formControlName="email">
+          <mat-error *ngIf="email?.invalid">{{getEmailErrorMessage()}} </mat-error>
+        </mat-form-field>
+      </p>
+
+      <button type="submit" mat-button class="sign-up-button">Sign Up</button>
+
+      <br>
+      <br>
+      <div class="nav-item" [routerLinkActive]="['link-active']">
+        <p>Have an account? &nbsp; <a [routerLink]="['/sign-in']">Sign In</a> </p>
+      </div>
+
+      <div class="form-group">
+        <div class="alert alert-danger" role="alert" *ngIf="signUpFailed">
+          SignUp Failed : {{ errorMessage}}
+        </div>
+      </div>
+
+    </form>
+
+    <div class="alert alert-success" *ngIf="signedIn | async">
+      You are already signed in! </div>
+    <div class="alert alert-success" *ngIf="signedUp">
+      Your registration is successful!
+      <br>
+      Please wait for an administrator to accept your request to be able to sign in to JustBidIt.
+    </div>
+  </mat-card-content>
+</mat-card>

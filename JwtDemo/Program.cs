@@ -15,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<IAccountService, AccountService>();
@@ -88,7 +89,7 @@ builder.Services.AddCors(options =>
             cfg.AllowAnyHeader();
             cfg.AllowAnyMethod();
             //cfg.WithOrigins(builder.Configuration["AllowedCORS"]);
-            cfg.WithOrigins("https://localhost/44451", "http://localhost/54993");//
+            cfg.WithOrigins("https://localhost:44434", "http://localhost:2076)");
             cfg.AllowCredentials();
             cfg.SetIsOriginAllowed(_ => true);
         }));

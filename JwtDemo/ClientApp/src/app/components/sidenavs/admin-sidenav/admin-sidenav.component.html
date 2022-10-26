@@ -1,0 +1,21 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #adminSidenav>
+        <br>
+        <br>
+        <img src="../../assets/administrator.png" class="profile-img-card" />
+        <br>
+        <br>
+        <span class="welcome-text">{{"Welcome back " + (username$ | async) + "!"}} </span>
+        <hr/>
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/']"> FetchData </a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+        <app-admin-nav-menu> </app-admin-nav-menu>
+        <app-admin-landing-page></app-admin-landing-page>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

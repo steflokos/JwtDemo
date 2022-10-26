@@ -1,7 +1,12 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
+
+  <app-visitor-sidenav *ngIf="!(signedIn$| async)" ></app-visitor-sidenav>
+
+  <app-admin-sidenav *appHasRole="adminRole"></app-admin-sidenav>
+
+  <app-user-sidenav *appHasRole="userRole"></app-user-sidenav>
+
+  
+
 </body>
 

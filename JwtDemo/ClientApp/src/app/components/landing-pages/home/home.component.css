@@ -1,0 +1,36 @@
+.message-text {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(132, 184, 182);
+}
+.title{
+    text-align: center;
+}
+.text-content{
+    text-align: center;
+}
+
+.action-container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    /* flex-direction: row; */
+    /* display: table; */
+    width: 100%;
+}
+
+.table-column-left {
+    width:75%;
+}
+
+.table-column-right {
+    width:75%;
+}

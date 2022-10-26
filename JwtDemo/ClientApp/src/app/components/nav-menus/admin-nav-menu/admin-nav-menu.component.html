@@ -1,0 +1,30 @@
+<mat-toolbar class="navbar bg-white border-bottom box-shadow mb-3">
+
+  <button mat-icon-button (click)="toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <a class="navbar-brand" [routerLink]="['/']">JwtDemo</a>
+
+  <span class="spacer"></span>
+
+  <mat-list>
+
+    <mat-list-item>
+      <button mat-icon-button [routerLink]="['/']">
+        <mat-icon>home</mat-icon>
+      </button>
+    </mat-list-item>
+
+    <!-- <mat-list-item>
+      <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
+    </mat-list-item> -->
+
+    <mat-list-item>
+      <a class="nav-link text-dark" [routerLink]="['/sign-out']">Sign-Out</a>
+    </mat-list-item>
+
+  </mat-list>
+
+
+</mat-toolbar>

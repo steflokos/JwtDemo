@@ -8,7 +8,7 @@ namespace JwtDemo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AccountController : ControllerBase
     {
 
@@ -17,6 +17,13 @@ namespace JwtDemo.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public string Test()
+        {
+            return "hello";
         }
 
         [HttpPost("sign-up")]

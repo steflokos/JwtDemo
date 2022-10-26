@@ -1,0 +1,22 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #visitorSidenav>
+        <br>
+        <br>
+        <img src="../../assets/account.png" class="profile-img-card" />
+        <br>
+        <br>
+        <span class="welcome-text">Hello Visitor</span>
+        <hr/>
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/sign-up']"> Create Account </a>
+            <br>
+            <a mat-list-item [routerLink]="['/sign-in']"> Sign In </a>
+            <a mat-list-item [routerLink]="['/fetch-data']"> Fetch Data </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <app-visitor-nav-menu> </app-visitor-nav-menu>
+        <app-visitor-landing-page></app-visitor-landing-page>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -3,6 +3,7 @@ using JwtDemo.Enumerations;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 using JwtDemo.Models;
+using JwtDemo.DatabaseContext;
 
 namespace JwtDemo.DatabaseContext
 {
@@ -29,6 +30,8 @@ namespace JwtDemo.DatabaseContext
             (c1, c2) => c1.SequenceEqual(c2),
             c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
             c => c.ToList()));
+
+            new DbInitializer(modelBuilder).Seed();
         }
 
 
