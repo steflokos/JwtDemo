@@ -1,7 +1,6 @@
-﻿using System;
+﻿
 using JwtDemo.Interfaces;
 using JwtDemo.Models;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -28,14 +27,14 @@ namespace JwtDemo.Services
         public async Task<bool> IsCurrentAccessTokenActiveAsync()
             => await IsAccessTokenActiveAsync(GetCurrentAccessTokenAsync());
 
-        public async Task DeactivateCurrentAccessTokenAsync()
-            => await DeactivateAccessTokenAsync(GetCurrentAccessTokenAsync());
+        public async Task BlacklistCurrentAccessTokenAsync()
+            => await BlacklistAccessTokenAsync(GetCurrentAccessTokenAsync());
 
         public async Task<bool> IsAccessTokenActiveAsync(string token)
             => await _cache.GetStringAsync(token) == null;
 
 
-        public async Task DeactivateAccessTokenAsync(string token)
+        public async Task BlacklistAccessTokenAsync(string token)
             => await _cache.SetStringAsync(token,
                 " ", new DistributedCacheEntryOptions
                 {
@@ -54,8 +53,7 @@ namespace JwtDemo.Services
                 : authorizationHeader.Single().Split(" ").Last();
         }
 
-        private static string GetKey(string token)
-            => $"tokens:{token}:deactivated";
+       
 
         
     }

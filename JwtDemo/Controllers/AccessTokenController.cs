@@ -23,7 +23,7 @@ namespace JwtDemo.Controllers
         [HttpPost("cancel")]
         public async Task<IActionResult> CancelCurrentAccessToken()
         {
-            await _accessTokenManager.DeactivateCurrentAccessTokenAsync();
+            await _accessTokenManager.BlacklistCurrentAccessTokenAsync();
             return NoContent();
         }
     }

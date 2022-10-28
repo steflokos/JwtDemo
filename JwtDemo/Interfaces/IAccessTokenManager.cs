@@ -3,10 +3,10 @@
     public interface IAccessTokenManager
     {
         Task<bool> IsCurrentAccessTokenActiveAsync();
-        Task DeactivateCurrentAccessTokenAsync();
+        Task BlacklistCurrentAccessTokenAsync();
 
         Task<bool> IsAccessTokenActiveAsync(string token);
-        Task DeactivateAccessTokenAsync(string token);
+        Task BlacklistAccessTokenAsync(string token);
     }
 }
 

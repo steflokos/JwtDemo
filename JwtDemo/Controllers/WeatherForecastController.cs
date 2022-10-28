@@ -1,10 +1,14 @@
-﻿using JwtDemo.Models;
+﻿using JwtDemo.Enumerations;
+using JwtDemo.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JwtDemo.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -20,6 +24,7 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = nameof(Role.Admin))]
     public IEnumerable<WeatherForecast> Get()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast

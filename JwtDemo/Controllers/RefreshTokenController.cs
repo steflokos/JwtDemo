@@ -21,6 +21,7 @@ namespace JwtDemo.Controllers
         }
 
         [HttpPost("revoke/{token}")]
+        [AllowAnonymous]
         public async Task<IActionResult> RevokeRefreshToken(string token)
         {
             await _refreshTokenManager.RevokeRefreshTokenAsync(token);

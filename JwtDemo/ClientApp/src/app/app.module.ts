@@ -67,7 +67,7 @@ import { FetchDataComponent } from './components/fetch-data/fetch-data.component
       { path: 'visitor', component: VisitorLandingPageComponent },
       { path: 'admin', component: AdminLandingPageComponent, canActivate: [AuthGuard] },
       { path: 'user', component: UserLandingPageComponent, canActivate: [AuthGuard] },
-      { path: 'fetch-data', component: FetchDataComponent }
+      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] }
     ]),
     BrowserAnimationsModule,
     MaterialModule,

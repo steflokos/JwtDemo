@@ -19,13 +19,6 @@ namespace JwtDemo.Controllers
             _accountService = accountService;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public string Test()
-        {
-            return "hello";
-        }
-
         [HttpPost("sign-up")]
         [AllowAnonymous]
         public async Task<IActionResult> SignUp([FromBody] SignUpRequest signUpRequest)

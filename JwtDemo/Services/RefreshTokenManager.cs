@@ -43,6 +43,10 @@ namespace JwtDemo.Services
         {
 
             string jsonData =await _cache.GetStringAsync(token);
+            
+            if(string.IsNullOrEmpty(jsonData)){
+                throw new Exception("Something went wrong.");
+            }
 
             JwtUserInfo? user = JsonSerializer.Deserialize<JwtUserInfo>(jsonData);
 

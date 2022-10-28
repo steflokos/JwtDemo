@@ -23,8 +23,8 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private tokenService: TokenStorageService, private authService: AuthService, private router:Router) {
-   
+  constructor(private tokenService: TokenStorageService, private authService: AuthService, private router: Router) {
+
   }
 
 
@@ -40,14 +40,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authRequest).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && !authRequest.url.includes('account/sign-in') && error.status === 401) {
+        console.error("mpike edo");
         return this.handle401Error(authRequest, next);
       }
-      else if(error instanceof HttpErrorResponse && error.status === 403)
-      {
-        this.handle403Error(authRequest, next);
+      else if (error instanceof HttpErrorResponse && error.status === 403) {
+        this.handle403Error();
       }
-      
-      
+
+
       return throwError(error);
       //return throwError(() => new Error(error.message));
     }));
@@ -55,7 +55,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-    
+
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
@@ -71,23 +71,18 @@ export class AuthInterceptor implements HttpInterceptor {
           }),
           catchError((err) => {
             this.isRefreshing = false;
-            this.authService.signOut().subscribe(() => {
-              this.tokenService.clearStorage();
-              this.router.navigate(['/sign-in'], {});
-              this.authService.signedInSetNext(false);
-              this.authService.userRolesSetNext(emptyRoleArray);
-            });;
+            this.authService.signOut();
+            this.router.navigate(['/sign-in'],{});
             return throwError(() => new Error(err));
           })
         );
       }
-      else{
- 
+      else {
         this.isRefreshing = false;
         this.router.navigate(["sign-in"]);
       }
     }
-   
+
     return this.refreshTokenSubject.pipe(
       filter(token => token !== null),
       first(),
@@ -95,14 +90,11 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  private handle403Error(request: HttpRequest<any>, next: HttpHandler) {
-    this.authService.signOut().subscribe(() => {
-      this.tokenService.clearStorage();
-      this.router.navigate(['/sign-in'], {});
-      this.authService.signedInSetNext(false);
+  private handle403Error() {
+    console.log("mpike 403");
 
-      this.authService.userRolesSetNext(emptyRoleArray);
-    });;
+    this.authService.signOut();
+    this.router.navigate(['/sign-in'], {});
   }
 
 

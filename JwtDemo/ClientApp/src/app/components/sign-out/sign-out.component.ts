@@ -15,16 +15,8 @@ export class SignOutComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("apo sign out");
-    // this.authService.cancelToken().subscribe();
-    // this.tokenService.signOut();
-    // this.router.navigate(['/sign-in'], {});
-    this.authService.signOut().subscribe(() => {
-      this.tokenStorage.clearStorage();
-      this.router.navigate(['/sign-in'], {});
-      this.authService.signedInSetNext(false);
-
-      this.authService.userRolesSetNext(emptyRoleArray);
-    });;
+    this.authService.signOut();
+    this.router.navigate(['/sign-in'], {});
   }
 
 }

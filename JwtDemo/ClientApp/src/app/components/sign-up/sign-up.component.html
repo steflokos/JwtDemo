@@ -1,4 +1,4 @@
-<mat-card class="card scrollable-content">
+<mat-card *ngIf="!signedUp else signedUpResult" class="scrollable-content">
 
   <mat-card-header>
     <img src="../../assets/user-simple.png" class="profile-img-card" />
@@ -6,7 +6,8 @@
 
   <mat-card-content>
 
-    <form *ngIf="!signedUp && (!(signedIn | async))" [formGroup]="signUpForm" (ngSubmit)="signUpForm.valid && onSubmit()" novalidate>
+    <form *ngIf="!signedUp && (!(signedIn | async))" [formGroup]="signUpForm"
+      (ngSubmit)="signUpForm.valid && onSubmit()" novalidate>
 
       <p>
         <mat-form-field appearance="outline">
@@ -101,8 +102,18 @@
       You are already signed in! </div>
     <div class="alert alert-success" *ngIf="signedUp">
       Your registration is successful!
-      <br>
-      Please wait for an administrator to accept your request to be able to sign in to JustBidIt.
     </div>
   </mat-card-content>
 </mat-card>
+
+
+<ng-template #signedUpResult>
+  <mat-card class="fixed-content">
+    <div class="alert alert-success" *ngIf="signedUp">
+      Your registration is successful!
+    </div>
+    <a class="sign-in-message" [routerLink]="['/sign-in']">Sign In Now!</a>
+
+  </mat-card>
+
+</ng-template>

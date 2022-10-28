@@ -42,8 +42,7 @@ export class AuthGuard implements CanActivate {
     if(tokens) {
       this.authService.signOut();
     }
-    console.log("ston auth guard", state.url);
-    //this.authService.signOut(); //TODO EDO KATI PAIZEI OTAN KANEI REQ KAI DEN EINAI SIGNED IN, MPAINEI STO REDIS ME "" KAI MPLOKAREI OLO TO SISTIMA
+   
     this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } }); //edo na mpei se env
 
     return false;

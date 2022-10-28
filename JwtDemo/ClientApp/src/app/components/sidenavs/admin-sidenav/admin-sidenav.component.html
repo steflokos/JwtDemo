@@ -8,7 +8,8 @@
         <span class="welcome-text">{{"Welcome back " + (username$ | async) + "!"}} </span>
         <hr/>
         <mat-nav-list>
-            <a mat-list-item [routerLink]="['/']"> FetchData </a>
+            <a mat-list-item [routerLink]="['/fetch-data']"> Fetch Data </a>
+            <a mat-list-item [routerLink]="['/sign-out']"> Sign Out </a>
         </mat-nav-list>
     </mat-sidenav>
 

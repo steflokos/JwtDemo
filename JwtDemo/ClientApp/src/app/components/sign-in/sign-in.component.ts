@@ -42,11 +42,7 @@ export class SignInComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    // reset login status
-    //this.authService.signOut();
-
-    // get return url from route parameters or default to '/'
-    
+      
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     console.log("sto init",this.returnUrl);
   }
@@ -60,18 +56,15 @@ export class SignInComponent implements OnInit, OnDestroy {
         this.tokenStorage.saveAccessToken(data.accessToken);
         this.tokenStorage.saveRefreshToken(data.refreshToken);
 
-        let roles = this.authService.getUserRoles();
-
-        this.authService.userRolesSetNext(this.authService.getUserRoles());
+        const roles = this.authService.getUserRoles();
+        this.authService.userRolesSetNext(roles);
         this.signInFailed = false;
         this.signedIn = of(true);
-        //let roles = this.authService.getUserRoles();
-
         this.authService.signedInSetNext(true);
 
-
         if (this.returnUrl === "/") {
-          if (roles.length <= 0 || roles.includes(Role.Visitor)) {
+          console.log("returnurl",this.returnUrl);
+          if (!roles || roles.length <= 0) {
             this.router.navigate(['/visitor'], {});
           }
           else if (roles.includes(Role.Admin)) {
@@ -85,8 +78,6 @@ export class SignInComponent implements OnInit, OnDestroy {
           console.log("return url",this.returnUrl);
           this.router.navigateByUrl(this.returnUrl);
         }
-
-
       },
       error: (err) => {
         this.errorMessage = err.error.message;

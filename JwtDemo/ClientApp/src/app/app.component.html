@@ -1,12 +1,9 @@
 <body>
 
-  <app-visitor-sidenav *ngIf="!(signedIn$| async)" ></app-visitor-sidenav>
-
   <app-admin-sidenav *appHasRole="adminRole"></app-admin-sidenav>
 
   <app-user-sidenav *appHasRole="userRole"></app-user-sidenav>
 
-  
-
+  <app-visitor-sidenav *appHasRole="emptyRoleArray"></app-visitor-sidenav>
 </body>
 

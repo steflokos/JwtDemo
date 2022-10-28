@@ -3,7 +3,7 @@ export interface JsonWebToken{
     iat: number ;
     iss: string ;
     sub: string ;
-    role: [];
+    roles: [];
     unique_name:string ;
 
 }

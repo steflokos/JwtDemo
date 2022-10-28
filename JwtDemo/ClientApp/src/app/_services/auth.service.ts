@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  
+
 };
 const emptyRoleArray: Role[] = [];
 
@@ -41,12 +41,28 @@ export class AuthService {
   }
 
   signUp(signUpRequest: SignUpRequest) {
-
     return this.http.post(environment.accountAPI + 'sign-up', JSON.stringify(signUpRequest), httpOptions);
   }
 
   signOut() {
-    return this.cancelToken();
+    const refreshToken = this.tokenStorage.getRefreshToken()!;
+
+  
+
+    this.cancelAccessToken().subscribe({
+      next: () => {
+        
+        this.revokeRefreshToken(refreshToken).subscribe({
+          error: (err) => { console.error(err); }
+        });
+      },
+      error: (err) => { console.error(err); }
+    });
+
+    this.tokenStorage.clearStorage();
+    this.signedInSetNext(false);
+    this.userRolesSetNext(emptyRoleArray);
+
   }
 
 
@@ -54,11 +70,11 @@ export class AuthService {
     return this.http.post(environment.refreshTokenAPI + 'refresh/' + token, JSON.stringify(token), httpOptions);
   }
 
-  cancelToken() {
+  cancelAccessToken() {
     return this.http.post(environment.accessTokenAPI + 'cancel', httpOptions);
   }
 
-  revokeToken(token: string) {
+  revokeRefreshToken(token: string) {
     return this.http.post(environment.refreshTokenAPI + 'revoke/' + token, {
       refreshToken: token
     }, httpOptions);
@@ -78,14 +94,15 @@ export class AuthService {
     const accessToken = this.tokenStorage.getAccessToken();
     if (accessToken) {
       let decodedJwt: JsonWebToken = this.parseJwt(accessToken);
-      return decodedJwt.role;
+      return decodedJwt.roles;
     }
+
     else return emptyRoleArray;
   }
 
 
   getWhoAmI() {
-    return this.http.get(environment.userManagementAPI + 'who-am-i',{responseType: 'text' as 'text'});
+    return this.http.get(environment.userManagementAPI + 'who-am-i', { responseType: 'text' as 'text' });
   }
 
 

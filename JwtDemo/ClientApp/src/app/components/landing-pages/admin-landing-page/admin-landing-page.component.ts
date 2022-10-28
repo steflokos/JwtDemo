@@ -14,14 +14,12 @@ export class AdminLandingPageComponent implements OnInit {
   adminRole = Role.Admin;
   signedIn$ = this.authService.signedIn$;
   subscriptions: Subscription[] = [];
-  // notApprovedCount: Observable<number> = this.notificationService.notApprovedUsersCount$;
-  // notApprovedUsers: Observable<UserApprovalRequest[]> = this.notificationService.notApprovedUsers$;
-  constructor(private authService: AuthService,private router:Router ) { //private notificationService: NotificationsService
 
+  constructor(private authService: AuthService,private router:Router ) {
   }
 
   ngOnInit() {
-    this.router.navigate(["/"]);
+    this.router.navigate(["/fetch-data"]);
   };
 
 
