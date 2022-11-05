@@ -2,7 +2,7 @@
 {
     public interface IAccessTokenManager
     {
-        Task<bool> IsCurrentAccessTokenActiveAsync();
+        Task<bool> IsCurrentAccessTokenBlacklistedAsync();
         Task BlacklistCurrentAccessTokenAsync();
 
         Task<bool> IsAccessTokenActiveAsync(string token);

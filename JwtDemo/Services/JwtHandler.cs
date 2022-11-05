@@ -36,8 +36,6 @@ namespace JwtDemo.Services
 
             var iat = (long)(new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds);
 
-            var t = jwtUserInfo.Roles;
-
             string[] roleArray = jwtUserInfo.Roles!.Select(i => i.ToString()).ToArray();
 
 

@@ -15,7 +15,7 @@ namespace JwtDemo.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (await _tokenManager.IsCurrentAccessTokenActiveAsync())
+            if (await _tokenManager.IsCurrentAccessTokenBlacklistedAsync())
             {
                 await next(context);
 

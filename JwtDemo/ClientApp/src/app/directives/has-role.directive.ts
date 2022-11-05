@@ -23,9 +23,10 @@ export class HasRoleDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // var roles: Role[] = this.tokenStorage.getUserRoles();
+ 
     this.authService.userRoles$.subscribe((data) => {
+     // console.log("mpike dir");
       this.userRoles = data;
-
 
       if (!this.userRoles) {
         this.viewContainerRef.clear();

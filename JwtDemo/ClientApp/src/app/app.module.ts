@@ -32,6 +32,8 @@ import { VisitorSidenavComponent } from './components/sidenavs/visitor-sidenav/v
 import { UserLandingPageComponent } from './components/landing-pages/user-landing-page/user-landing-page.component';
 import { VisitorLandingPageComponent } from './components/landing-pages/visitor-landing-page/visitor-landing-page.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 
@@ -71,7 +73,13 @@ import { FetchDataComponent } from './components/fetch-data/fetch-data.component
     ]),
     BrowserAnimationsModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [authInterceptorProviders, DatePipe],
   bootstrap: [AppComponent]

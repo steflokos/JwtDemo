@@ -7,6 +7,7 @@ import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { Role } from 'src/app/models/role';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WorkerManagerService } from 'src/app/_services/worker-manager.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,8 +26,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   signedIn = this.authService.signedIn$;
   errorMessage: string = '';
   signInSubscription: Subscription = Subscription.EMPTY;
-  
-  userRoles$ = this.authService.getUserRoles();
+
+  userRoles$ = this.authService.userRoles$;
   authUsername = this.authService.getWhoAmI();
   signInForm: FormGroup = this.formBuilder.group({
     username: new FormControl('', [Validators.minLength(2), Validators.required]),
@@ -35,56 +36,126 @@ export class SignInComponent implements OnInit, OnDestroy {
   returnUrl: string = '/';
 
 
-  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private tokenStorage: TokenStorageService, private route: ActivatedRoute,) {
-    
+  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private tokenStorage: TokenStorageService, private route: ActivatedRoute, private workerService: WorkerManagerService) {
+
   }
 
 
 
-  ngOnInit(): void {
-      
+  ngOnInit() {
+
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    console.log("sto init",this.returnUrl);
+    console.log("sto init", this.returnUrl);
   }
 
-  onSubmit() {
+  async onSubmit() {
 
     var signInRequest: SignInRequest = new SignInRequest(<SignInRequest>this.signInForm.value);
-    this.signInSubscription = this.authService.signIn(signInRequest).subscribe({
-      next: (data: any): void => {
+    //this.signInSubscription = this.authService.signIn(signInRequest)
+    //.subscribe({
+    //   next: (data: any): void => {
 
-        this.tokenStorage.saveAccessToken(data.accessToken);
-        this.tokenStorage.saveRefreshToken(data.refreshToken);
+    //     this.tokenStorage.saveAccessToken(data.accessToken);
+    //     this.tokenStorage.saveRefreshToken(data.refreshToken);
 
-        const roles = this.authService.getUserRoles();
+    //     const roles = this.authService.getUserRoles();
+    //     this.authService.userRolesSetNext(roles);
+    //     this.signInFailed = false;
+    //     this.signedIn = of(true);
+    //     this.authService.signedInSetNext(true);
+
+    //     if (this.returnUrl === "/") {
+    //       console.log("returnurl",this.returnUrl);
+    //       if (!roles || roles.length <= 0) {
+    //         this.router.navigate(['/visitor'], {});
+    //       }
+    //       else if (roles.includes(Role.Admin)) {
+    //         this.router.navigate(['/admin'], {});
+    //       }
+    //       else if (roles.includes(Role.User) ) {
+    //         this.router.navigate(['/user'], {});
+    //       }
+    //     }
+    //     else{
+    //       console.log("return url",this.returnUrl);
+    //       this.router.navigateByUrl(this.returnUrl);
+    //     }
+    //   },
+    //   error: (err) => {
+    //     this.errorMessage = err.error.message;
+    //     this.signInFailed = true;
+    //   },
+
+    // });
+
+    const response = await this.authService.signIn(signInRequest);
+    switch (response.status) {
+      case 200:
+        const roles = JSON.parse(response.body);
+
+        console.log("oi roloi einai", roles);
         this.authService.userRolesSetNext(roles);
         this.signInFailed = false;
         this.signedIn = of(true);
         this.authService.signedInSetNext(true);
 
         if (this.returnUrl === "/") {
-          console.log("returnurl",this.returnUrl);
+          console.log("returnurl", this.returnUrl);
           if (!roles || roles.length <= 0) {
             this.router.navigate(['/visitor'], {});
           }
           else if (roles.includes(Role.Admin)) {
             this.router.navigate(['/admin'], {});
           }
-          else if (roles.includes(Role.User) ) {
+          else if (roles.includes(Role.User)) {
             this.router.navigate(['/user'], {});
           }
         }
-        else{
-          console.log("return url",this.returnUrl);
+        else {
+          console.log("return url", this.returnUrl);
           this.router.navigateByUrl(this.returnUrl);
         }
-      },
-      error: (err) => {
-        this.errorMessage = err.error.message;
+        break;
+      case 400:
+      default:
+        this.errorMessage = response.errorMessage;
         this.signInFailed = true;
-      },
+        break;
+    }
+    // res.subscribe({
+    //     next: (data: any): void => {
 
-    });
+    //       const roles = data;
+    //       console.log("oi roloi einai", roles);
+    //       this.authService.userRolesSetNext(roles);
+    //       this.signInFailed = false;
+    //       this.signedIn = of(true);
+    //       this.authService.signedInSetNext(true);
+
+    //       if (this.returnUrl === "/") {
+    //         console.log("returnurl",this.returnUrl);
+    //         if (!roles || roles.length <= 0) {
+    //           this.router.navigate(['/visitor'], {});
+    //         }
+    //         else if (roles.includes(Role.Admin)) {
+    //           this.router.navigate(['/admin'], {});
+    //         }
+    //         else if (roles.includes(Role.User) ) {
+    //           this.router.navigate(['/user'], {});
+    //         }
+    //       }
+    //       else{
+    //         console.log("return url",this.returnUrl);
+    //         this.router.navigateByUrl(this.returnUrl);
+    //       }
+    //     },
+    //     error: (err) => {
+    //       this.errorMessage = err.error.message;
+    //       this.signInFailed = true;
+    //     },
+
+    //   });
+
 
   }
 

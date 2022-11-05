@@ -63,9 +63,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:SecretKey"])),
         ValidIssuer = builder.Configuration["jwt:issuer"],
         ValidAudience = builder.Configuration["jwt:audience"],
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true
+        ValidateIssuer = bool.Parse(builder.Configuration["jwt:validateIssuer"]),
+        ValidateAudience = bool.Parse(builder.Configuration["jwt:validateAudience"]),
+        ValidateLifetime = bool.Parse(builder.Configuration["jwt:validateLifetime"])
     };
 
     options.Events = new JwtBearerEvents
@@ -109,7 +109,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<ErrorHandlerMiddleware>(); //xreiazetai ontoss?? na to do
 app.UseAuthentication();
 app.UseMiddleware<TokenManagerMiddleware>();
 app.UseAuthorization();

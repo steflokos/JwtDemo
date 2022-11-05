@@ -93,6 +93,8 @@ namespace JwtDemo.Services
 
         }
 
+        //TODO NA VALO SIGNOUT EDO 
+
         private void AddRoles(DbUser DbUser)
         {
             DbUser.Role = new List<Role>

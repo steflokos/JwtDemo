@@ -24,7 +24,7 @@ namespace JwtDemo.Services
             _jwtOptions = jwtOptions;
         }
 
-        public async Task<bool> IsCurrentAccessTokenActiveAsync()
+        public async Task<bool> IsCurrentAccessTokenBlacklistedAsync()
             => await IsAccessTokenActiveAsync(GetCurrentAccessTokenAsync());
 
         public async Task BlacklistCurrentAccessTokenAsync()

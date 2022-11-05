@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { AuthService } from '../_services/auth.service';
+import { WorkerManagerService } from '../_services/worker-manager.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,37 +13,33 @@ import { AuthService } from '../_services/auth.service';
 
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router,private workerService: WorkerManagerService) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
-    var accessToken = window.sessionStorage.getItem(environment.accessToken);
-    var refreshToken = window.sessionStorage.getItem(environment.refreshToken);
+    const bothExist = await this.workerService.tokenExist();
 
-    if (!!accessToken && !!refreshToken) {
-
-      const response$ = this.authService.checkRefreshTokenExpiration(refreshToken);
-      const isActive = await lastValueFrom(response$);
-
+    if (bothExist) {
+      const isActive = await this.workerService.checkRefreshTokenExpiration();
+      console.log("auth fuard active token",isActive);
       if (isActive === false) {
-        //this.eventBusService.emit(new EventData('logout', null)); //me to event bus, den to exo dokimasei, mporei na doulepsei
-        return this.handleUnauthorizedRouting(state,!!accessToken && !!refreshToken);
+        return this.handleUnauthorizedRouting(state, bothExist);
       }
       // logged in so return true
       return true;
     }
 
     // not logged in so redirect to login page with the return url
-    return this.handleUnauthorizedRouting(state,!!accessToken && !!refreshToken);
+    return this.handleUnauthorizedRouting(state, bothExist);
   }
 
-  private handleUnauthorizedRouting(state: RouterStateSnapshot,tokens:boolean): boolean {
+  private handleUnauthorizedRouting(state: RouterStateSnapshot, tokens: boolean): boolean {
 
 
-    if(tokens) {
-      this.authService.signOut();
+    if (tokens) {
+      this.workerService.signOut();
     }
-   
+
     this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } }); //edo na mpei se env
 
     return false;
