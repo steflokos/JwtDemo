@@ -27,6 +27,17 @@ namespace JwtDemo.Controllers
             return NoContent();
         }
 
+        [HttpPost("sign-out")]
+        public async Task<IActionResult> SignOut([FromBody] string? refreshToken = default)
+        {
+            if(string.IsNullOrEmpty(refreshToken)){
+                return BadRequest();
+            }
+
+            await _accountService.SignOut(refreshToken);
+            return NoContent();
+        }
+
         [HttpPost("sign-in")]
         [AllowAnonymous]
         public async Task<IActionResult> SignIn([FromBody] SignInRequest signInRequest)

@@ -10,6 +10,8 @@ namespace JwtDemo.Interfaces
 
         Task<JsonWebToken> SignIn(SignInRequest signinReq);
 
+        Task SignOut(string refreshToken);
+
     }
 }
 

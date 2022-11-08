@@ -14,13 +14,15 @@ namespace JwtDemo.Services
         private readonly IPasswordHasher<DbUser> _passwordHasher;
         private readonly IRefreshTokenManager _refreshTokenManager;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IAccessTokenManager _accessTokenManager;
         public AccountService(IJwtHandler jwtHandler,
-            IPasswordHasher<DbUser> passwordHasher, IRefreshTokenManager refreshTokenManager, IServiceScopeFactory scopeFactory)
+            IPasswordHasher<DbUser> passwordHasher, IRefreshTokenManager refreshTokenManager, IServiceScopeFactory scopeFactory, IAccessTokenManager accessTokenManager)
         {
             _jwtHandler = jwtHandler;
             _passwordHasher = passwordHasher;
             _refreshTokenManager = refreshTokenManager;
             _scopeFactory = scopeFactory;
+            _accessTokenManager = accessTokenManager;
         }
 
         public async Task SignUp(SignUpRequest signUpRequest)
@@ -49,6 +51,11 @@ namespace JwtDemo.Services
                 await db.SaveChangesAsync();
             }
 
+        }
+        public async Task SignOut(string refreshToken)
+        {
+            await this._refreshTokenManager.RevokeRefreshTokenAsync(refreshToken);
+            await this._accessTokenManager.BlacklistCurrentAccessTokenAsync();
         }
 
         public async Task<JsonWebToken> SignIn(SignInRequest signInRequest)
@@ -93,7 +100,6 @@ namespace JwtDemo.Services
 
         }
 
-        //TODO NA VALO SIGNOUT EDO 
 
         private void AddRoles(DbUser DbUser)
         {
