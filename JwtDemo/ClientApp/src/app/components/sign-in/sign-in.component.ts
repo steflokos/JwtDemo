@@ -51,111 +51,38 @@ export class SignInComponent implements OnInit, OnDestroy {
   async onSubmit() {
 
     var signInRequest: SignInRequest = new SignInRequest(<SignInRequest>this.signInForm.value);
-    //this.signInSubscription = this.authService.signIn(signInRequest)
-    //.subscribe({
-    //   next: (data: any): void => {
+    this.signInSubscription = this.authService.signIn(signInRequest)
+      .subscribe({
+        next: (roles: any): void => {
 
-    //     this.tokenStorage.saveAccessToken(data.accessToken);
-    //     this.tokenStorage.saveRefreshToken(data.refreshToken);
+          this.authService.userRolesSetNext(roles);
+          this.signInFailed = false;
+          this.signedIn = of(true);
+          this.authService.signedInSetNext(true);
 
-    //     const roles = this.authService.getUserRoles();
-    //     this.authService.userRolesSetNext(roles);
-    //     this.signInFailed = false;
-    //     this.signedIn = of(true);
-    //     this.authService.signedInSetNext(true);
-
-    //     if (this.returnUrl === "/") {
-    //       console.log("returnurl",this.returnUrl);
-    //       if (!roles || roles.length <= 0) {
-    //         this.router.navigate(['/visitor'], {});
-    //       }
-    //       else if (roles.includes(Role.Admin)) {
-    //         this.router.navigate(['/admin'], {});
-    //       }
-    //       else if (roles.includes(Role.User) ) {
-    //         this.router.navigate(['/user'], {});
-    //       }
-    //     }
-    //     else{
-    //       console.log("return url",this.returnUrl);
-    //       this.router.navigateByUrl(this.returnUrl);
-    //     }
-    //   },
-    //   error: (err) => {
-    //     this.errorMessage = err.error.message;
-    //     this.signInFailed = true;
-    //   },
-
-    // });
-
-    const response = await this.authService.signIn(signInRequest);
-    switch (response.status) {
-      case 200:
-        const roles = JSON.parse(response.body);
-
-        console.log("oi roloi einai", roles);
-        this.authService.userRolesSetNext(roles);
-        this.signInFailed = false;
-        this.signedIn = of(true);
-        this.authService.signedInSetNext(true);
-
-        if (this.returnUrl === "/") {
-          console.log("returnurl", this.returnUrl);
-          if (!roles || roles.length <= 0) {
-            this.router.navigate(['/visitor'], {});
+          if (this.returnUrl === "/") {
+            console.log("returnurl", this.returnUrl);
+            if (!roles || roles.length <= 0) {
+              this.router.navigate(['/visitor'], {});
+            }
+            else if (roles.includes(Role.Admin)) {
+              this.router.navigate(['/admin'], {});
+            }
+            else if (roles.includes(Role.User)) {
+              this.router.navigate(['/user'], {});
+            }
           }
-          else if (roles.includes(Role.Admin)) {
-            this.router.navigate(['/admin'], {});
+          else {
+            console.log("return url", this.returnUrl);
+            this.router.navigateByUrl(this.returnUrl);
           }
-          else if (roles.includes(Role.User)) {
-            this.router.navigate(['/user'], {});
-          }
-        }
-        else {
-          console.log("return url", this.returnUrl);
-          this.router.navigateByUrl(this.returnUrl);
-        }
-        break;
-      case 400:
-      default:
-        this.errorMessage = response.errorMessage;
-        this.signInFailed = true;
-        break;
-    }
-    // res.subscribe({
-    //     next: (data: any): void => {
+        },
+        error: (err) => {
+          this.errorMessage = err.error.message;
+          this.signInFailed = true;
+        },
 
-    //       const roles = data;
-    //       console.log("oi roloi einai", roles);
-    //       this.authService.userRolesSetNext(roles);
-    //       this.signInFailed = false;
-    //       this.signedIn = of(true);
-    //       this.authService.signedInSetNext(true);
-
-    //       if (this.returnUrl === "/") {
-    //         console.log("returnurl",this.returnUrl);
-    //         if (!roles || roles.length <= 0) {
-    //           this.router.navigate(['/visitor'], {});
-    //         }
-    //         else if (roles.includes(Role.Admin)) {
-    //           this.router.navigate(['/admin'], {});
-    //         }
-    //         else if (roles.includes(Role.User) ) {
-    //           this.router.navigate(['/user'], {});
-    //         }
-    //       }
-    //       else{
-    //         console.log("return url",this.returnUrl);
-    //         this.router.navigateByUrl(this.returnUrl);
-    //       }
-    //     },
-    //     error: (err) => {
-    //       this.errorMessage = err.error.message;
-    //       this.signInFailed = true;
-    //     },
-
-    //   });
-
+      });
 
   }
 
@@ -165,8 +92,6 @@ export class SignInComponent implements OnInit, OnDestroy {
 
 
   getUsernameErrorMessage() {
-
-
     if (this.username?.hasError('required')) {
       return 'You must enter a value.';
     }

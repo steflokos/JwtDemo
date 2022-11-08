@@ -8,8 +8,6 @@ import { AppComponent } from './app.component';
 import { AdminNavMenuComponent } from './components/nav-menus/admin-nav-menu/admin-nav-menu.component';
 import { HomeComponent } from './components/landing-pages/home/home.component';
 
-
-import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { AuthGuard } from './_helpers/auth.guard';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
@@ -32,8 +30,9 @@ import { VisitorSidenavComponent } from './components/sidenavs/visitor-sidenav/v
 import { UserLandingPageComponent } from './components/landing-pages/user-landing-page/user-landing-page.component';
 import { VisitorLandingPageComponent } from './components/landing-pages/visitor-landing-page/visitor-landing-page.component';
 import { FetchDataComponent } from './components/fetch-data/fetch-data.component';
+
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {errorInterceptorProviders } from './_helpers/error.interceptor';
 
 
 
@@ -74,14 +73,15 @@ import { environment } from '../environments/environment';
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
+          
+    ServiceWorkerModule.register('master-sw.js', {//ngsw-worker
+      enabled: true,//environment.production
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [authInterceptorProviders, DatePipe],
+  providers: [errorInterceptorProviders,DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

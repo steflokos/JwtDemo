@@ -13,9 +13,12 @@ export class SignOutComponent implements OnInit {
 
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     console.log("apo sign out");
-    await this.authService.signOut();
+    this.authService.signOut().subscribe(
+      {next: () => {console.log("mpike signout");}
+      ,error:(err)=>{console.log(err)}}
+    );
     this.router.navigate(['/sign-in'], {});
   }
 

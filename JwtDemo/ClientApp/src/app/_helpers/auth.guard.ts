@@ -13,18 +13,20 @@ import { WorkerManagerService } from '../_services/worker-manager.service';
 
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router,private workerService: WorkerManagerService) { }
+  constructor(private router: Router,private workerService: WorkerManagerService,private authService: AuthService) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
-    const bothExist = await this.workerService.tokenExist();
-
+    const bothExist = await this.workerService.tokensExist();
+    console.log("both exist auth guard", bothExist);
     if (bothExist) {
-      const isActive = await this.workerService.checkRefreshTokenExpiration();
-      console.log("auth fuard active token",isActive);
-      if (isActive === false) {
-        return this.handleUnauthorizedRouting(state, bothExist);
-      }
+
+      // const isActive = await this.workerService.checkRefreshTokenExpiration();
+
+      // console.log("auth fuard active token",isActive);
+      // if (isActive === false) {
+      //   return this.handleUnauthorizedRouting(state, bothExist);
+      // }
       // logged in so return true
       return true;
     }
@@ -33,14 +35,15 @@ export class AuthGuard implements CanActivate {
     return this.handleUnauthorizedRouting(state, bothExist);
   }
 
-  private handleUnauthorizedRouting(state: RouterStateSnapshot, tokens: boolean): boolean {
+  private handleUnauthorizedRouting(state: RouterStateSnapshot, tokensExist: boolean): boolean {
 
 
-    if (tokens) {
-      this.workerService.signOut();
+    if (tokensExist) {
+      //this.workerService.signOut();
+      this.authService.signOut().subscribe();
     }
 
-    this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } }); //edo na mpei se env
+    this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } });
 
     return false;
   }
