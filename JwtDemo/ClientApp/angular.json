@@ -25,7 +25,9 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/assets",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/auth-sw.js",
+              "src/master-sw.js"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
@@ -33,9 +35,9 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json",
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
+            
           },
           "configurations": {
             "production": {
@@ -104,8 +106,7 @@
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
-            "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "scripts": []
           }
         },
         "server": {
