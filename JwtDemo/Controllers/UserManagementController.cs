@@ -25,7 +25,7 @@ namespace JwtDemo.Controllers
         
 
         [HttpGet("who-am-i")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         //[Authorize(Roles = $"{nameof(Role.Seller)},{nameof(Role.Bidder)},{nameof(Role.Admin)}")]
         public ActionResult<string> GetWhoAmI()
         {
