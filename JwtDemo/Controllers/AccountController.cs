@@ -8,7 +8,7 @@ namespace JwtDemo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AccountController : ControllerBase
     {
 
@@ -19,8 +19,8 @@ namespace JwtDemo.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost("sign-up")]
         [AllowAnonymous]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp([FromBody] SignUpRequest signUpRequest)
         {
             await _accountService.SignUp(signUpRequest);
@@ -30,18 +30,18 @@ namespace JwtDemo.Controllers
         [HttpPost("sign-out")]
         public async Task<IActionResult> SignOut([FromBody] string? refreshToken = default)
         {
-            if(string.IsNullOrEmpty(refreshToken)){
+            if (string.IsNullOrEmpty(refreshToken))
+            {
                 return BadRequest();
             }
 
             await _accountService.SignOut(refreshToken);
             return NoContent();
         }
-
-        [HttpPost("sign-in")]
         [AllowAnonymous]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignInRequest signInRequest)
-            => Ok(await _accountService.SignIn(signInRequest));
+                    => Ok(await _accountService.SignIn(signInRequest));
     }
 }
 
