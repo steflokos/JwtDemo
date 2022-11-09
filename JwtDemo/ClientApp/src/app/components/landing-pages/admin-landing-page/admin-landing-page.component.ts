@@ -19,7 +19,7 @@ export class AdminLandingPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.router.navigate(["/fetch-data"]);
+    this.router.navigate(["/"]);
   };
 
 

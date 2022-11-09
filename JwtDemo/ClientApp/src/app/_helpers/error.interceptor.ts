@@ -3,7 +3,6 @@ import { HTTP_INTERCEPTORS, HttpEvent, HttpErrorResponse, HttpContext } from '@a
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 
-import { TokenStorageService } from '../_services/token-storage.service';
 import { AuthService } from '../_services/auth.service';
 
 import { BehaviorSubject, Observable, throwError, lastValueFrom, from } from 'rxjs';
@@ -29,18 +28,16 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
 
-    return next.handle(request).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)) {
+    return next.handle(request)
+      .pipe(catchError(error => {
+        if (error instanceof HttpErrorResponse && ((!request.url.includes('account/sign-in') && !request.url.includes('account/sign-out') && error.status === 401) || error.status === 403)) {
+          this.handleUnauthorized();
+   
+        }
+        return throwError(error);
 
-        this.handleUnauthorized();
-      }
-
-
-      const err = error.error.message || error.statusText;
-      return throwError(err);
-
-      //return throwError(() => new Error(error.message));
-    }));
+        //return throwError(() => new Error(error.message));
+      }));
 
 
   }
@@ -48,7 +45,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   private handleUnauthorized() {
     this.authService.signOut().subscribe({
       next: () => {
-
         this.authService.signedInSetNext(false);
         this.authService.userRolesSetNext(emptyRoleArray);
         this.router.navigate(['/sign-in'], {});
@@ -58,7 +54,6 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   }
 }
-
 
 
 export const errorInterceptorProviders = [

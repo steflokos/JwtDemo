@@ -3,9 +3,13 @@ import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Rout
 
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Role } from '../models/role';
 
 import { AuthService } from '../_services/auth.service';
 import { WorkerManagerService } from '../_services/worker-manager.service';
+
+
+const emptyRoleArray: Role[] = [];
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +22,6 @@ export class AuthGuard implements CanActivate {
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
     const bothExist = await this.workerService.tokensExist();
-    console.log("both exist auth guard", bothExist);
     if (bothExist) {
 
       // const isActive = await this.workerService.checkRefreshTokenExpiration();
@@ -39,8 +42,14 @@ export class AuthGuard implements CanActivate {
 
 
     if (tokensExist) {
-      //this.workerService.signOut();
-      this.authService.signOut().subscribe();
+      this.authService.signOut().subscribe({
+        next: () => {
+          this.authService.signedInSetNext(false);
+          this.authService.userRolesSetNext(emptyRoleArray);
+          this.router.navigate(['/sign-in']);
+        },
+        error: (err) => { console.error(err); }
+      });
     }
 
     this.router.navigate(['/sign-in'], { queryParams: { returnUrl: state.url } });

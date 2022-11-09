@@ -10,102 +10,108 @@ const channel = new BroadcastChannel('sw-messages');
 
 addEventListener('fetch', async (event) => {
 
-  console.log('http-intercepted', event.request);
-
-
   if (event.request.url.includes('account/sign-in')) {
 
     event.respondWith(
       fetch(event.request).then(async function (response) {
         if (response.ok) {
+
           let jsonResponse = await response.json();
 
-          accessToken = jsonResponse.accessToken;
-          refreshToken = jsonResponse.refreshToken;
-         
-          expiresIn = jsonResponse.expiresIn;
-          console.log("expires in",expiresIn);
-          roles = getUserRoles();
+          self.accessToken = jsonResponse.accessToken;
+          self.refreshToken = jsonResponse.refreshToken;
+          self.expiresIn = jsonResponse.expiresIn;
+          self.roles = self.getUserRoles();
 
-          return new Response(JSON.stringify(roles), response);
-        
+          return new Response(JSON.stringify(self.roles), response);
+
         }
-        else{
+        else {
           return response;
         }
       })
-    )
+    );
 
   }
 
-  else if(event.request.url.includes('account/sign-out')){
+  else if (event.request.url.includes('account/sign-out')) {
 
-    const body = JSON.stringify(refreshToken);
-    const {cache, credentials, headers, integrity, method,mode, redirect, referrer} = event.request;
-    const init = {body, cache, credentials, headers, integrity, method,mode, redirect, referrer};
+    const body = JSON.stringify(self.refreshToken);
+    const { cache, credentials, headers, integrity, method, mode, redirect, referrer } = event.request;
+    const init = { body, cache, credentials, headers, integrity, method, mode, redirect, referrer };
+    init.headers = { "Content-Type": "application/json", "Authorization": `Bearer ${self.accessToken}` };
+    //console.log("init", init);
+    event.respondWith(fetch(event.request.url, init).then(async response => {
 
 
-    event.respondWith(fetch(event.request.url,init).then(async response =>{
-
-      if(!response.ok && response.status === 401) {
+      if (!response.ok && response.status === 401) {
+        //console.log("mpike 401");
         const seconds = Math.floor(Date.now() / 1000);
-        if(!!expiresIn && expiresIn <= seconds) {
-          await refreshAccessToken()
+        if (!!self.expiresIn && self.expiresIn <= seconds) {
+          //console.log("mpike gia refresh");
+          await self.refreshAccessToken();
         }
-          init.headers={headers: {"Authorization": `Bearer ${accessToken}`}}
 
-        refreshToken=null;
-        accessToken=null;
-        expiresIn=0;
+        init.headers = { "Content-Type": "application/json", "Authorization": `Bearer ${self.accessToken}` };
 
-        return fetch(event.request.url,init).then(response => {return response});
+        //console.log("init mesa 401", init);
+        return fetch(event.request.url, init).then(response => {
+          self.refreshToken = null;
+          self.accessToken = null;
+          self.expiresIn = 0;
+          self.roles = [];
+          return response;
+        });
 
       }
+
+      self.refreshToken = null;
+      self.accessToken = null;
+      self.expiresIn = 0;
+      self.roles = [];
       return response;
-      
+
     }));
   }
   else {
-    
-      event.respondWith(fetch(event.request).then(async response =>{
+    event.respondWith(fetch(event.request).then(async response => {
 
-        if(!response.ok && response.status === 401) {
-          const seconds = Math.floor(Date.now() / 1000);
-          if(!!expiresIn && expiresIn <= seconds) {
-            await refreshAccessToken()
-          }
-            let newRequest = new Request(event.request, {
-              headers: {"Authorization": `Bearer ${accessToken}`},
-          });
-          return fetch(newRequest).then(response => {return response});
+      if (!response.ok && response.status === 401) {
+        const seconds = Math.floor(Date.now() / 1000);
+        if (!!self.expiresIn && self.expiresIn <= seconds) {
+          await self.refreshAccessToken();
         }
-        return response;
-        
-      }));
-    
-  }
+        let newRequest = new Request(event.request, {
+          headers: { "Authorization": `Bearer ${self.accessToken}` },
+        });
+        return fetch(newRequest).then(response => { return response; });
+      }
+      return response;
+
+    }));
 
   }
+
+}
 );
 
 addEventListener('message', async ({ data }) => {
-  console.log("tora mpike ston listner me ", data, data.type);
 
   switch (data.type) {
     case "getRoles":
-      channel.postMessage({ type: "getRoles", data: roles });
+      channel.postMessage({ type: "getRoles", data: self.roles });
       break;
     case "actExists":
-      channel.postMessage({ type: "actExists", data: accessTokenExists() });
+      channel.postMessage({ type: "actExists", data: self.accessTokenExists() });
       break;
     case "rftExists":
-      channel.postMessage({ type: "rftExists", data: refreshTokenExists() });
+      channel.postMessage({ type: "rftExists", data: self.refreshTokenExists() });
       break;
     case "bothExist":
-      channel.postMessage({ type: "bothExist", data: tokensExist() });
+      channel.postMessage({ type: "bothExist", data: self.tokensExist() });
       break;
     case "checkRefresh":
-      const expired = await checkRefreshTokenExpiration();
+      const expired = await self.checkRefreshTokenExpiration();
       channel.postMessage({ type: "checkRefresh", data: expired });
       break;
   }
@@ -114,20 +120,20 @@ addEventListener('message', async ({ data }) => {
 
 
 function refreshTokenExists() {
-  return !!refreshToken;
+  return !!self.refreshToken;
 }
 
 function accessTokenExists() {
-  return !!accessToken;
+  return !!self.accessToken;
 }
 
 function tokensExist() {
-  return refreshTokenExists() && accessTokenExists();
+  return self.refreshTokenExists() && self.accessTokenExists();
 }
 
 function getUserRoles() {
-  if (accessToken) {
-    let decodedJwt = parseJwt(accessToken);
+  if (self.accessToken) {
+    let decodedJwt = parseJwt(self.accessToken);
     return decodedJwt.roles;
   }
   else return emptyRoleArray;
@@ -144,7 +150,7 @@ function parseJwt(token) {
 };
 
 async function checkRefreshTokenExpiration() {
-  const rawResponse = await fetch(environment.refreshTokenAPI + 'is-active/' + refreshToken, {
+  const rawResponse = await fetch('/refreshToken/is-active/' + self.refreshToken, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -157,7 +163,7 @@ async function checkRefreshTokenExpiration() {
 
 async function refreshAccessToken() {
 
-  const rawResponse = await fetch('/refreshToken/refresh/' + refreshToken, {
+  const rawResponse = await fetch('/refreshToken/refresh/' + self.refreshToken, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -165,8 +171,8 @@ async function refreshAccessToken() {
     },
   });
   const content = await rawResponse.json();
-  accessToken = content.accessToken;
-  refreshToken = content.refreshToken;
-  expiresIn = content.expiresIn;
+  self.accessToken = content.accessToken;
+  self.refreshToken = content.refreshToken;
+  self.expiresIn = content.expiresIn;
   // return content;
 }

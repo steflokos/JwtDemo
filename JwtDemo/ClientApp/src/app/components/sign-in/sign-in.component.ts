@@ -3,7 +3,6 @@ import { SignInRequest } from 'src/app/models/sign-in-request';
 import { AuthService } from 'src/app/_services/auth.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, of, Subscription } from 'rxjs';
-import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { Role } from 'src/app/models/role';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -36,7 +35,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   returnUrl: string = '/';
 
 
-  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private tokenStorage: TokenStorageService, private route: ActivatedRoute, private workerService: WorkerManagerService) {
+  constructor(private router: Router, private authService: AuthService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
 
   }
 
@@ -45,7 +44,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    console.log("sto init", this.returnUrl);
+
   }
 
   async onSubmit() {
@@ -61,7 +60,6 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.authService.signedInSetNext(true);
 
           if (this.returnUrl === "/") {
-            console.log("returnurl", this.returnUrl);
             if (!roles || roles.length <= 0) {
               this.router.navigate(['/visitor'], {});
             }
@@ -73,12 +71,13 @@ export class SignInComponent implements OnInit, OnDestroy {
             }
           }
           else {
-            console.log("return url", this.returnUrl);
+
             this.router.navigateByUrl(this.returnUrl);
           }
         },
         error: (err) => {
-          this.errorMessage = err.error.message;
+          const error = err.error.message || err.statusText;
+          this.errorMessage = error;
           this.signInFailed = true;
         },
 

@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { SignUpRequest } from 'src/app/models/sign-up-request';
 import { SignInRequest } from 'src/app/models/sign-in-request';
 import { Role } from 'src/app/models/role';
-import { TokenStorageService } from './token-storage.service';
+
 import { JsonWebToken } from 'src/app/models/json-web-token';
 import { Router } from '@angular/router';
 import { WorkerManagerService } from './worker-manager.service';
@@ -34,7 +34,6 @@ export class AuthService implements OnInit {
   //this.workerService.getRoles()
   // from(new Promise<Role[]>(resolve => resolve(emptyRoleArray)));;
   constructor(private http: HttpClient, private router: Router, private workerService: WorkerManagerService) {
-
     this.workerService.tokensExist().then(
       (tokenExist: boolean) => {
         this._signedIn.next(tokenExist);// = new BehaviorSubject<boolean>();
@@ -50,9 +49,26 @@ export class AuthService implements OnInit {
         // this._userRoles$ = this._userRoles.asObservable();
       }
     );
+
   }
 
   ngOnInit(): void {
+
+    // this.workerService.tokensExist().then(
+    //   (tokenExist: boolean) => {
+    //     this._signedIn.next(tokenExist);// = new BehaviorSubject<boolean>();
+    //     //this._signedIn$ = this._signedIn.asObservable();
+    //   }
+    // );
+
+    // this.workerService.getRoles().then(
+
+    //   (roles: Role[]) => {
+    //     //console.log("apo constr");
+    //     this._userRoles.next(roles);//new BehaviorSubject<Role[]>(roles);
+    //     // this._userRoles$ = this._userRoles.asObservable();
+    //   }
+    // );
   }
 
 
