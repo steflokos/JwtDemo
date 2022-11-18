@@ -17,19 +17,19 @@ const emptyRoleArray: Role[] = [];
 
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router,private workerService: WorkerManagerService,private authService: AuthService) { }
+  constructor(private router: Router, private workerService: WorkerManagerService, private authService: AuthService) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
 
     const bothExist = await this.workerService.tokensExist();
-    if (bothExist) {
 
-      // const isActive = await this.workerService.checkRefreshTokenExpiration();
+    if (bothExist === true) {
 
-      // console.log("auth fuard active token",isActive);
-      // if (isActive === false) {
-      //   return this.handleUnauthorizedRouting(state, bothExist);
-      // }
+      const isActive = await this.workerService.checkRefreshTokenExpiration();
+      console.log("auth fuard active token",isActive);
+      if (isActive === false) {
+        return this.handleUnauthorizedRouting(state, bothExist);
+      }
       // logged in so return true
       return true;
     }
@@ -46,7 +46,6 @@ export class AuthGuard implements CanActivate {
         next: () => {
           this.authService.signedInSetNext(false);
           this.authService.userRolesSetNext(emptyRoleArray);
-          this.router.navigate(['/sign-in']);
         },
         error: (err) => { console.error(err); }
       });
