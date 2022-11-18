@@ -14,10 +14,10 @@ namespace JwtDemo.Models
         public string? Username { get; set; }
         public List<Role>? Roles { get; set; }
 
-        //refresh token expiration time in TimeSpan stored
-        //in redis and used in refresh token rotation
-        //as expiration time (so it is not updated every time)
-        public TimeSpan? ExpiresIn { get; set; }
+        //keep track of time that the refresh token
+        //was issued in order to reduce time properly
+        //on token rotation
+        public DateTime IssuedAt { get; set; }
 
     }
 }

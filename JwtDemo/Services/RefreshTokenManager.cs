@@ -36,15 +36,30 @@ namespace JwtDemo.Services
             //so we want to set expiration time according to jwt given options.
             //Else, we use previous rft expiration time, so when we rotate token
             //it will not be available to refresh access infinetely.
-            if (refreshToken.Info!.ExpiresIn != null)
+            if (refreshToken.Info!.IssuedAt != default)
             {
-                expires = (TimeSpan)refreshToken.Info!.ExpiresIn!;
+                var nowUtc = DateTime.UtcNow;
+                var diff = (DateTime.UtcNow - refreshToken.Info!.IssuedAt).TotalSeconds;
+                
+                var lifetime = TimeSpan.FromMinutes(_jwtOptions.Value.RefreshTokenLifetime).TotalSeconds;
+                
+                if (lifetime - diff > 0)
+                {
+                    expires = TimeSpan.FromSeconds(lifetime - diff);
+                }
+                else
+                {
+                    expires = DateTime.Now.TimeOfDay;
+                }
+
             }
             else
             {
+                refreshToken.Info!.IssuedAt = DateTime.UtcNow;
                 expires = TimeSpan.FromMinutes(_jwtOptions.Value.RefreshTokenLifetime);
             }
 
+            var t = JsonSerializer.Serialize(refreshToken.Info);
             await _cache.SetStringAsync(refreshToken.Token, JsonSerializer.Serialize(refreshToken.Info),
                             new DistributedCacheEntryOptions
                             {

@@ -76,7 +76,7 @@ namespace JwtDemo.Services
                         throw new Exception("Invalid credentials.");
                     }
 
-                    RefreshTokenInfo RefreshTokenInfo = new RefreshTokenInfo { Username = user.Username, Roles = user.Role, ExpiresIn = null };
+                    RefreshTokenInfo RefreshTokenInfo = new RefreshTokenInfo { Username = user.Username, Roles = user.Role, IssuedAt = default };
 
                     JsonWebToken jwt = _jwtHandler.GenerateJwt(RefreshTokenInfo);
 
