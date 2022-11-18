@@ -29,13 +29,32 @@ namespace JwtDemo.Services
         }
 
         public async Task ActivateRefreshTokenAsync(RefreshToken refreshToken)
+        {
+            TimeSpan expires;
 
-        => await _cache.SetStringAsync(refreshToken.Token, JsonSerializer.Serialize(refreshToken.UserInfo),
-                        new DistributedCacheEntryOptions
-                        {
-                            AbsoluteExpirationRelativeToNow =
-                                TimeSpan.FromMinutes(_jwtOptions.Value.RefreshTokenLifetime)
-                        });
+            //if rft expires is null, function was called when user signed in
+            //so we want to set expiration time according to jwt given options.
+            //Else, we use previous rft expiration time, so when we rotate token
+            //it will not be available to refresh access infinetely.
+            if (refreshToken.Info!.ExpiresIn != null)
+            {
+                expires = (TimeSpan)refreshToken.Info!.ExpiresIn!;
+            }
+            else
+            {
+                expires = TimeSpan.FromMinutes(_jwtOptions.Value.RefreshTokenLifetime);
+            }
+
+            await _cache.SetStringAsync(refreshToken.Token, JsonSerializer.Serialize(refreshToken.Info),
+                            new DistributedCacheEntryOptions
+                            {
+                                AbsoluteExpirationRelativeToNow = expires
+
+                            });
+
+        }
+
+
 
 
         public async Task<bool> IsRefreshTokenActiveAsync(string token)
@@ -53,22 +72,23 @@ namespace JwtDemo.Services
             {
                 string jsonData = await _cache.GetStringAsync(token);
 
+
                 if (string.IsNullOrEmpty(jsonData))
                 {
                     throw new Exception("Something went wrong.");
                 }
 
-                JwtUserInfo? jwtUserInfo = JsonSerializer.Deserialize<JwtUserInfo>(jsonData);
+                RefreshTokenInfo? RefreshTokenInfo = JsonSerializer.Deserialize<RefreshTokenInfo>(jsonData);
 
-                if (jwtUserInfo == null)
+                if (RefreshTokenInfo == null)
                 {
                     throw new Exception("Something went wrong.");
                 }
 
                 ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                DbUser? user = await db.Users!.FindAsync(jwtUserInfo.Username);
+                DbUser? user = await db.Users!.FindAsync(RefreshTokenInfo.Username);
 
-                var jwt = _jwtHandler.GenerateJwt(jwtUserInfo);
+                var jwt = _jwtHandler.GenerateJwt(RefreshTokenInfo);
                 //generate new rft for rft rotation implementation
 
                 var refreshToken = _passwordHasher.HashPassword(user!, Guid.NewGuid().ToString())
@@ -80,7 +100,7 @@ namespace JwtDemo.Services
 
                 await this.RevokeRefreshTokenAsync(token);
 
-                await this.ActivateRefreshTokenAsync(new RefreshToken { UserInfo = jwtUserInfo, Token = refreshToken });
+                await this.ActivateRefreshTokenAsync(new RefreshToken { Info = RefreshTokenInfo, Token = refreshToken });
 
                 return jwt;
 
