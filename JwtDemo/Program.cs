@@ -57,7 +57,6 @@ builder.Services.AddAuthentication(options =>
 
     options.TokenValidationParameters = new TokenValidationParameters()
     {
-
         //RequireExpirationTime = true,
         ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:SecretKey"])),
@@ -109,7 +108,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-app.UseMiddleware<ErrorHandlerMiddleware>(); //xreiazetai ontoss?? na to do
+app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseAuthentication();
 app.UseMiddleware<TokenManagerMiddleware>();
 app.UseAuthorization();

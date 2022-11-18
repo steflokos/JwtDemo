@@ -16,7 +16,6 @@ namespace JwtDemo.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-
             try
             {
                 await _next(httpContext);
@@ -27,26 +26,19 @@ namespace JwtDemo.Middleware
             }
         }
 
-
         private static Task HandleErrorAsync(HttpContext context, Exception exception)
         {
-
                 var response = new { message = exception.Message };
-
                 string payload = JsonSerializer.Serialize(response);
 
                 context.Response.ContentType = "application/json";
-
                 context.Response.StatusCode = 400;
 
                 return context.Response.WriteAsync(payload);
 
-
         }
     }
-
-
-
-
 }
+
+
 

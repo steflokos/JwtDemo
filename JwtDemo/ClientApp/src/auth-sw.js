@@ -33,7 +33,6 @@ addEventListener('fetch', async (event) => {
     );
 
   }
-
   else if (event.request.url.includes('account/sign-out')) {
 
     const body = JSON.stringify(self.refreshToken);

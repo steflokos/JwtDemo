@@ -15,6 +15,7 @@ namespace JwtDemo.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            //if the access token in headers is blacklisted return 401 Unauthorized
             if (await _tokenManager.IsCurrentAccessTokenBlacklistedAsync())
             {
                 await next(context);
@@ -24,7 +25,7 @@ namespace JwtDemo.Middleware
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         }
     }
-
-   
 }
+
+
 
