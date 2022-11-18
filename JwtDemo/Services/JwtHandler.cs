@@ -24,7 +24,7 @@ namespace JwtDemo.Services
         }
 
 
-        public JsonWebToken GenerateJwt(JwtUserInfo jwtUserInfo)
+        public JsonWebToken GenerateJwt(RefreshTokenInfo RefreshTokenInfo)
         {
             var nowUtc = DateTime.UtcNow;
 
@@ -36,16 +36,16 @@ namespace JwtDemo.Services
 
             var iat = (long)(new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds);
 
-            string[] roleArray = jwtUserInfo.Roles!.Select(i => i.ToString()).ToArray();
+            string[] roleArray = RefreshTokenInfo.Roles!.Select(i => i.ToString()).ToArray();
 
 
             var payload = new JwtPayload
             {
-                {"sub", jwtUserInfo.Username},
+                {"sub", RefreshTokenInfo.Username},
                 {"iss", _options.Issuer},
                 {"iat", iat},
                 {"exp", exp},
-                {"unique_name", jwtUserInfo.Username},
+                {"unique_name", RefreshTokenInfo.Username},
                 {"aud",_options.Audience},
                 {"roles",roleArray}
             };

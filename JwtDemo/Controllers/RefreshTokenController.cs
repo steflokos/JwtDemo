@@ -44,6 +44,7 @@ namespace JwtDemo.Controllers
         }
 
         [HttpGet("is-active/{token}")]
+        [AllowAnonymous]
         public async Task<IActionResult> CheckRefreshTokenExpiration(string token)
          => Ok(await _refreshTokenManager.IsRefreshTokenActiveAsync(token));
     }

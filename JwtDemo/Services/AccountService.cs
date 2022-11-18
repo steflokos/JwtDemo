@@ -76,9 +76,9 @@ namespace JwtDemo.Services
                         throw new Exception("Invalid credentials.");
                     }
 
-                    JwtUserInfo jwtUserInfo = new JwtUserInfo { Username = user.Username, Roles = user.Role };
+                    RefreshTokenInfo RefreshTokenInfo = new RefreshTokenInfo { Username = user.Username, Roles = user.Role, ExpiresIn = null };
 
-                    var jwt = _jwtHandler.GenerateJwt(jwtUserInfo);
+                    JsonWebToken jwt = _jwtHandler.GenerateJwt(RefreshTokenInfo);
 
                     var refreshToken = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString())
                         .Replace("+", string.Empty)
@@ -87,7 +87,7 @@ namespace JwtDemo.Services
 
                     jwt.RefreshToken = refreshToken;
 
-                    await _refreshTokenManager.ActivateRefreshTokenAsync(new RefreshToken { UserInfo = jwtUserInfo, Token = refreshToken });
+                    await _refreshTokenManager.ActivateRefreshTokenAsync(new RefreshToken { Info = RefreshTokenInfo, Token = refreshToken });
 
 
                     return jwt;
