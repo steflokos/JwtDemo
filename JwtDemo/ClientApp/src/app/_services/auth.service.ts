@@ -44,7 +44,7 @@ export class AuthService implements OnInit {
     this.workerService.getRoles().then(
 
       (roles: Role[]) => {
-        //console.log("apo constr");
+
         this._userRoles.next(roles);//new BehaviorSubject<Role[]>(roles);
         // this._userRoles$ = this._userRoles.asObservable();
       }
@@ -54,21 +54,6 @@ export class AuthService implements OnInit {
 
   ngOnInit(): void {
 
-    // this.workerService.tokensExist().then(
-    //   (tokenExist: boolean) => {
-    //     this._signedIn.next(tokenExist);// = new BehaviorSubject<boolean>();
-    //     //this._signedIn$ = this._signedIn.asObservable();
-    //   }
-    // );
-
-    // this.workerService.getRoles().then(
-
-    //   (roles: Role[]) => {
-    //     //console.log("apo constr");
-    //     this._userRoles.next(roles);//new BehaviorSubject<Role[]>(roles);
-    //     // this._userRoles$ = this._userRoles.asObservable();
-    //   }
-    // );
   }
 
 

@@ -22,7 +22,6 @@ addEventListener('fetch', async (event) => {
           self.refreshToken = jsonResponse.refreshToken;
           self.expiresIn = jsonResponse.expiresIn;
           self.roles = self.getUserRoles();
-
           return new Response(JSON.stringify(self.roles), response);
 
         }
@@ -39,21 +38,20 @@ addEventListener('fetch', async (event) => {
     const { cache, credentials, headers, integrity, method, mode, redirect, referrer } = event.request;
     const init = { body, cache, credentials, headers, integrity, method, mode, redirect, referrer };
     init.headers = { "Content-Type": "application/json", "Authorization": `Bearer ${self.accessToken}` };
-    //console.log("init", init);
     event.respondWith(fetch(event.request.url, init).then(async response => {
 
 
       if (!response.ok && response.status === 401) {
-        //console.log("mpike 401");
+
         const seconds = Math.floor(Date.now() / 1000);
         if (!!self.expiresIn && self.expiresIn <= seconds) {
-          //console.log("mpike gia refresh");
+  
           await self.refreshAccessToken();
         }
 
         init.headers = { "Content-Type": "application/json", "Authorization": `Bearer ${self.accessToken}` };
 
-        //console.log("init mesa 401", init);
+       
         return fetch(event.request.url, init).then(response => {
           self.refreshToken = null;
           self.accessToken = null;

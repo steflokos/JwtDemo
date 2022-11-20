@@ -28,15 +28,14 @@ export class HasRoleDirective implements OnInit, OnDestroy {
 
       this.userRoles = data;
       if (!this.userRoles) {
-        console.log("mpike edoo");
-        
+
         this.viewContainerRef.clear();
       }
 
       else if (this.areEqual(this.userRoles, this.appHasRole)) {//this.userRoles.includes(this.appHasRole)
         // If it is already visible (which can happen if
         // his roles changed) we do not need to add it a second time
-        //console.log(this.userRoles.includes(this.appHasRole!));
+
         if (!this.isVisible) {
           // We update the `isVisible` property and add the 
           // templateRef to the view using the 

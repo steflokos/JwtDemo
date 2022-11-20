@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     if (bothExist === true) {
 
       const isActive = await this.workerService.checkRefreshTokenExpiration();
-      console.log("auth fuard active token",isActive);
+
       if (isActive === false) {
         return this.handleUnauthorizedRouting(state, bothExist);
       }
