@@ -7,7 +7,7 @@ a.navbar-brand {
 
 
 
-.mat-list {
+.mat-mdc-list {
     display: flex;
     flex-direction: row;
    }

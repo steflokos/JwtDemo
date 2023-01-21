@@ -1,6 +1,6 @@
 
 
-  .mat-card
+  .mat-mdc-card
   {
     max-width: 400px !important;
     padding: 40px 40px;
@@ -32,7 +32,7 @@
   }
   
 
-  .mat-form-field
+  .mat-mdc-form-field
   {
     width: 300px;
     height: 10%;

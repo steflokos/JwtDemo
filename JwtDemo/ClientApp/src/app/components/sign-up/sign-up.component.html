@@ -1,4 +1,4 @@
-<mat-card *ngIf="!signedUp else signedUpResult" class="scrollable-content">
+<mat-card appearance="outlined" *ngIf="!signedUp else signedUpResult" class="scrollable-content">
 
   <mat-card-header>
     <img src="../../assets/user-simple.png" class="profile-img-card" />
@@ -108,7 +108,7 @@
 
 
 <ng-template #signedUpResult>
-  <mat-card class="fixed-content">
+  <mat-card appearance="outlined" class="fixed-content">
     <div class="alert alert-success" *ngIf="signedUp">
       Your registration is successful!
     </div>

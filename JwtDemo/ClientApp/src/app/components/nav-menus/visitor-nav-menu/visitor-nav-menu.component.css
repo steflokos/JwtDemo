@@ -5,7 +5,7 @@ a.navbar-brand {
     color: rgb(26, 145, 139);
 }
 
-.mat-list {
+.mat-mdc-list {
     display: flex;
     flex-direction: row;
 }

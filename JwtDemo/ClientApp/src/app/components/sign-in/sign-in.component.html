@@ -1,4 +1,4 @@
-<mat-card class="card card-container">
+<mat-card appearance="outlined" class="card card-container">
   <img  src="../../assets/user-simple.png" class="profile-img-card" />
 
   <form *ngIf="!(signedIn | async)" [formGroup]="signInForm" (ngSubmit)="signInForm.valid && onSubmit()" novalidate>

@@ -5,7 +5,7 @@ a.navbar-brand {
   color: rgb(26, 145, 139);
 }
 
-.mat-list {
+.mat-mdc-list {
   display: flex;
   flex-direction: row;
 }
@@ -33,7 +33,7 @@ html {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-.mat-flat-button {
+.mat-mdc-unelevated-button {
   border-radius: 10px;
 }
 
