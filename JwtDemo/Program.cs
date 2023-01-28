@@ -30,10 +30,12 @@ builder.Services.AddTransient<TokenManagerMiddleware>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-   options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-   ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+// builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+//    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 //builder.Services.AddDistributedRedisCache(r => { r.Configuration = builder.Configuration["redis:connectionString"]; })
 builder.Services.AddStackExchangeRedisCache(r => { r.Configuration = builder.Configuration["redis:connectionString"]; });
 
@@ -119,5 +121,16 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 
 app.Run();
