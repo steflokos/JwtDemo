@@ -3,6 +3,7 @@ using JwtDemo.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,32 +16,34 @@ namespace JwtDemo.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("JwtDemo.Models.DbUser", b =>
                 {
                     b.Property<string>("Username")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContactNumber")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<string>("Role")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.HasKey("Username");
 
@@ -54,7 +57,7 @@ namespace JwtDemo.Migrations
                             Email = "admin@mail.com",
                             FirstName = "admin",
                             LastName = "admin",
-                            Password = "473AE0C7A1B3E1789FED994034FF16AAD0FD7E6EF4834A4F07A4B6AC5C7AD87D:ABBBE7944A6F6DBCBDCE5BD7D2709885:100000:SHA256",
+                            Password = "2B869D99B804B48A7C24E085D9C6D33B564250A6B9D4FAC221F7EF1690441555:0ECA7C7FDDC829CFEE411646BC96ED18:100000:SHA256",
                             Role = "[\"Admin\"]"
                         });
                 });
