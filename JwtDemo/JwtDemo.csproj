@@ -42,6 +42,34 @@
     <None Remove="Services\" />
     <None Remove="Npgsql" />
     <None Remove="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <None Remove="ClientApp\dist\ngsw-worker.js" />
+    <None Remove="ClientApp\dist\master-sw.js" />
+    <None Remove="ClientApp\dist\index.html" />
+    <None Remove="ClientApp\dist\safety-worker.js" />
+    <None Remove="ClientApp\dist\polyfills.b2355584b8880bf2.js" />
+    <None Remove="ClientApp\dist\3rdpartylicenses.txt" />
+    <None Remove="ClientApp\dist\main.142a484d605bb497.js" />
+    <None Remove="ClientApp\dist\runtime.459bbdf4cff2f0c5.js" />
+    <None Remove="ClientApp\dist\worker-basic.min.js" />
+    <None Remove="ClientApp\dist\styles.7fbd5c1bd40de2ab.css" />
+    <None Remove="ClientApp\dist\manifest.webmanifest" />
+    <None Remove="ClientApp\dist\auth-sw.js" />
+    <None Remove="ClientApp\dist\assets\check_simple.png" />
+    <None Remove="ClientApp\dist\assets\visitor.png" />
+    <None Remove="ClientApp\dist\assets\user-simple.png" />
+    <None Remove="ClientApp\dist\assets\check_cartoon.png" />
+    <None Remove="ClientApp\dist\assets\account.png" />
+    <None Remove="ClientApp\dist\assets\item.png" />
+    <None Remove="ClientApp\dist\assets\administrator.png" />
+    <None Remove="ClientApp\dist\assets\no-pictures.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-192x192.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-384x384.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-72x72.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-96x96.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-152x152.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-512x512.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-144x144.png" />
+    <None Remove="ClientApp\dist\assets\icons\icon-128x128.png" />
   </ItemGroup>
 
   <ItemGroup>
