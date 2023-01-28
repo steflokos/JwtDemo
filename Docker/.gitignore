@@ -1,0 +1,5 @@
+/redis/data
+/pgadmin/data
+/postgresql/data
+/postgresql/logs
+/postgresql/wal
