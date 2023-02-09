@@ -117,3 +117,7 @@ If someone would like to bind ports to bare machine he can set *network_mode: ho
 ip addresses accordingly from *networks* section. This functionality is available only for linux host machines.
 
 Environment variables like database passwords and mounting locations of host machine can be set inside .env file of Docker folder.
+
+After executing docker compose and images are up and running, the user can now start the application from their editor or IDE
+(Visual Studio 2022 is suggested) in debug mode. Npm must be available on the computer in order to install node_modules with npm install inside ClientApp folder. Aspnet 7 sdk and typescript must also be present for the development and debug-running  of the app. 
+
