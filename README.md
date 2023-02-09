@@ -121,3 +121,4 @@ Environment variables like database passwords and mounting locations of host mac
 After executing docker compose and images are up and running, the user can now start the application from their editor or IDE
 (Visual Studio 2022 is suggested) in debug mode. Npm must be available on the computer in order to install node_modules with npm install inside ClientApp folder. Aspnet 7 sdk and typescript must also be present for the development and debug-running  of the app. 
 
+Application's default user is an administrator with username *admin* and password *admin*
